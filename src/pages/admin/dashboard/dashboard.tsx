@@ -5,15 +5,15 @@ import {
 	MenuUnfoldOutlined,
 	PieChartFilled,
 	ProductOutlined,
-	ShoppingCartOutlined,
+
 	TableOutlined,
 	UserOutlined,
-	UsergroupAddOutlined,
+	
 } from '@ant-design/icons';
-import { Button, Col, Layout, Menu, MenuProps, Row, theme } from 'antd';
-import RecentOrdersTable from '../components/recent-orders/recentOrders';
+import { Button,  Layout, Menu, MenuProps,  theme } from 'antd';
 import { AdminDashboardProps } from '../../../utils/context/admin-state-context/types/AdminTypes';
 import { AdminDashboardContext } from '../../../utils/context/admin-state-context/AdminContext';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 
@@ -29,6 +29,8 @@ const AdminDashboard: React.FC = () => {
 	const handleMenuClick: MenuProps['onClick'] = (e) => {
 		setSelectedKey(e.key);
 	};
+
+	const navigate = useNavigate()
 
 	return (
 		<Layout className=' w-screen h-screen font-main'>
@@ -52,12 +54,14 @@ const AdminDashboard: React.FC = () => {
 							icon: <PieChartFilled />,
 							label: 'Dashboard',
 							style: { color: selectedKey === '1' ? 'blue' : '#fff' },
+							onClick: () => navigate('/admin-dashboard')
 						},
 						{
 							key: '2',
 							icon: <ProductOutlined />,
 							label: 'Products',
 							style: { color: selectedKey === '2' ? 'blue' : '#fff' },
+							onClick: () => navigate('/admin-dashboard/product')
 						},
 						{
 							key: '3',
@@ -70,6 +74,7 @@ const AdminDashboard: React.FC = () => {
 							icon: <TableOutlined />,
 							label: 'Inventory',
 							style: { color: selectedKey === '4' ? 'blue' : '#fff' },
+							
 						},
 						{
 							key: '5',
@@ -119,33 +124,7 @@ const AdminDashboard: React.FC = () => {
 						background: colorBgContainer,
 						borderRadius: borderRadiusLG,
 					}}>
-					<Row className='w-full font-main flex gap-6 flex-wrap'>
-						<Col className=' w-[20%] bg-slate-200 rounded-2xl gap-1 h-[100px] flex flex-col justify-center items-center'>
-							<h5 className=' text-gray-500 text-xs font-bold'>Total Users</h5>
-							<UsergroupAddOutlined className=' text-4xl text-main' />
-
-							<h1 className=' text-gray-500 font-bold'>100</h1>
-						</Col>
-						<Col className='w-[50%] gap-2 bg-slate-200 rounded-2xl h-[120px] flex flex-col justify-center items-center'>
-							<h5 className=' text-gray-500 text-xs font-bold'>
-								Annual Revenue
-							</h5>
-							<PieChartFilled className=' text-4xl text-main' />
-							<h1 className=' text-gray-500 font-bold'>$10k+ in sales</h1>
-						</Col>
-						<Col className=' w-[20%] bg-slate-200 rounded-2xl h-[100px] flex flex-col justify-center items-center'>
-							<h5 className=' text-gray-500 text-xs font-bold'>Orders</h5>
-							<ShoppingCartOutlined className=' text-4xl text-main' />
-
-							<h1 className=' text-gray-500 font-bold'>20</h1>
-						</Col>
-					</Row>
-
-					<section className=' mt-24 font-main flex flex-col gap-4'>
-						<h1 className=' font-bold text-main'>Recent Orders from Store</h1>
-
-						<RecentOrdersTable />
-					</section>
+					<Outlet />
 				</Content>
 			</Layout>
 		</Layout>

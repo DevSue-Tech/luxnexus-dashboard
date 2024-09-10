@@ -10,12 +10,16 @@ import { User } from 'firebase/auth';
 import { Flex, Spin } from 'antd';
 import { AdminDashboardContext } from './utils/context/admin-state-context/AdminContext';
 import { AdminDashboardProps } from './utils/context/admin-state-context/types/AdminTypes';
+import DashboardIndex from './pages/admin/dashboard/dashboardIndex';
+import Products from './pages/admin/products/products';
+import AddNewProduct from './pages/admin/components/add-new-product/addNewProduct';
+import { fetchProducts } from './utils/firebase/products/productConfig';
 const AdminDashboard = React.lazy(
 	() => import('./pages/admin/dashboard/dashboard')
 );
 
 function App() {
-	const { user,setUser } = useContext(AdminDashboardContext) as AdminDashboardProps;
+	const { user,setUser, setProducts } = useContext(AdminDashboardContext) as AdminDashboardProps;
 	useEffect(() => {
 		const unsubscribe = customOnAuthStateChange(async (user: User | null) => {
 			if (user) {
@@ -26,6 +30,10 @@ function App() {
 				});
 
 				setUser(user);
+
+				const fetchedProducts = await fetchProducts();
+
+				setProducts(fetchedProducts)
 			} else {
 				console.log('No user is signed in.');
 			}
@@ -50,7 +58,13 @@ function App() {
 						}>
 						<AdminDashboard />
 					</Suspense>
-				}></Route>
+				}>
+				<Route index element={<DashboardIndex />}></Route>
+				<Route path='product' element={<Products />}>
+				
+				</Route>
+				<Route path='add-new-product' element={<AddNewProduct />}></Route>
+				</Route>
 		</Routes>
 	);
 }
