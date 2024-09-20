@@ -1,11 +1,11 @@
-import ProductList from "../components/product-list/productList";
+import { Outlet } from 'react-router-dom';
 
 const Products = () => {
-  return (
-    <div>
-      <ProductList />
-    </div>
-  )
-}
+	return (
+		<div>
+			<Outlet />
+		</div>
+	);
+};
 
 export default Products;

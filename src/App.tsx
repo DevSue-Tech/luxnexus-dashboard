@@ -14,12 +14,18 @@ import DashboardIndex from './pages/admin/dashboard/dashboardIndex';
 import Products from './pages/admin/products/products';
 import AddNewProduct from './pages/admin/components/add-new-product/addNewProduct';
 import { fetchProducts } from './utils/firebase/products/productConfig';
+import ProductIndex from './pages/admin/products/productIndex';
+import EditProduct from './pages/admin/products/editProduct';
+import Home from './pages/home/Home';
+import HomeIndexPage from './pages/home/HomeIndexPage';
 const AdminDashboard = React.lazy(
 	() => import('./pages/admin/dashboard/dashboard')
 );
 
 function App() {
-	const { user,setUser, setProducts } = useContext(AdminDashboardContext) as AdminDashboardProps;
+	const { user, setUser, setProducts } = useContext(
+		AdminDashboardContext
+	) as AdminDashboardProps;
 	useEffect(() => {
 		const unsubscribe = customOnAuthStateChange(async (user: User | null) => {
 			if (user) {
@@ -33,7 +39,7 @@ function App() {
 
 				const fetchedProducts = await fetchProducts();
 
-				setProducts(fetchedProducts)
+				setProducts(fetchedProducts);
 			} else {
 				console.log('No user is signed in.');
 			}
@@ -44,6 +50,9 @@ function App() {
 
 	return (
 		<Routes>
+			<Route path='/' element={<Home />}>
+				<Route index element={ <HomeIndexPage />} />
+			</Route>
 			<Route path='/admin-login' element={<AdminLogin />}></Route>
 			<Route
 				path='/admin-dashboard'
@@ -61,10 +70,14 @@ function App() {
 				}>
 				<Route index element={<DashboardIndex />}></Route>
 				<Route path='product' element={<Products />}>
-				
+					<Route index element={<ProductIndex />}></Route>
+					<Route path='add-new-product' element={<AddNewProduct />}></Route>
+					<Route path='edit-product/:id' element={<EditProduct />}>
+					
+					</Route>
+
 				</Route>
-				<Route path='add-new-product' element={<AddNewProduct />}></Route>
-				</Route>
+			</Route>
 		</Routes>
 	);
 }
