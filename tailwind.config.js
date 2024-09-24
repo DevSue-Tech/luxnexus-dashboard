@@ -7,14 +7,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        main: '#2078F9'
+        main: '#F8B466'
       },
       fontFamily: {
         main: 'Roboto',
         serrat: 'Montserrat'
       },
       backgroundImage: {
-        hero: 'url("/src/assets/hero.jpg")'
+        hero: 'url("/src/assets/hero.jpg")',
+        banner: 'url("/src/assets/banner.png")'
       }
     },
   },

@@ -1,5 +1,5 @@
 import {
-    DownOutlined,
+	DownOutlined,
 	HeartOutlined,
 	SearchOutlined,
 	ShoppingCartOutlined,
@@ -34,42 +34,87 @@ const Nav = () => {
 				</div>
 			</Carousel>
 
-			<header className=' py-4 px-12 flex items-end justify-between'>
+			<header className='py-4 px-12 flex items-end justify-between relative'>
 				<div>
 					<SearchOutlined style={{ fontSize: '24px' }} />
 				</div>
-				<div className=' flex gap-6 flex-col items-center'>
-					<h1 className=' text-main font-serrat font-bold text-3xl'>Luxenexus</h1>
 
-					<ul className=' flex gap-5 text-sm'>
-						<li className=' underline-custom'>
-							<Link to=''>What's new</Link>
-                        </li>
-                        <li className=' underline-custom'>
-							<Link to=''>Shop</Link>
-                        </li>
-                        <li className=' underline-custom'>
-							<Link to=''>Clothing</Link>
-                        </li>
-                        <li className=' underline-custom'>
-							<Link to=''>Bags</Link>
-                        </li>
-                        <li className=' underline-custom'>
-							<Link to=''>Shoes</Link>
-                        </li>
-						<li className=' flex items-end underline-custom'>
-                            <Link to=''>Men </Link>
-                            <DownOutlined className=' text-[10px]' />
+				<div className='flex font-serrat gap-6 flex-col items-center'>
+					<h1 className='text-main font-serrat font-bold text-3xl'>
+						Luxenexus
+					</h1>
+					<ul className='flex gap-5 text-sm'>
+						<li className='relative group'>
+							<Link to='' className='underline-custom'>
+								What's new
+							</Link>
+							{/* Hover Dropdown */}
+							<div className='absolute hidden cursor-pointer group-hover:flex flex-col mt-0 w-[200px]  font-serrat gap-5 top-full left-0 bg-white p-4 shadow-lg transition-all duration-200'>
+								<p >New Arrivals</p>
+								<p>Trending</p>
+							</div>
 						</li>
-                        <li className=' flex items-end underline-custom'>
-                            <Link to=''>Women </Link>
-                            <DownOutlined className=' text-[10px]' />
+
+						<li className='relative group'>
+							<Link to='' className='underline-custom'>
+								Shop
+							</Link>
+							<div className='absolute hidden cursor-pointer group-hover:flex flex-col mt-0 w-[200px]  font-serrat gap-5 top-full left-0 bg-white p-4 shadow-lg transition-all duration-200'>
+								<p>All Products</p>
+								<p>Popular Items</p>
+							</div>
 						</li>
-                       
-                        <li className=' underline-custom'>
-							<Link to=''>Contact us</Link>
-                        </li>
-                        
+
+						<li className='relative group'>
+							<Link to='' className='underline-custom'>
+								Clothing
+							</Link>
+						
+						</li>
+
+						<li className='relative group'>
+							<Link to='' className='underline-custom'>
+								Bags
+							</Link>
+						
+						</li>
+
+						<li className='relative group'>
+							<Link to='' className='underline-custom'>
+								Shoes
+							</Link>
+						
+						</li>
+
+						<li className='relative flex items-end underline-custom group'>
+							<Link to='' className='flex items-center'>
+								Men <DownOutlined className='text-[10px]' />
+							</Link>
+							<div className='absolute hidden cursor-pointer group-hover:flex flex-col mt-0 w-[200px]  font-serrat gap-5 top-full left-0 bg-white p-4 shadow-lg transition-all duration-200'>
+								<p>Men's Clothing</p>
+								<p>Men's Accessories</p>
+							</div>
+						</li>
+
+						<li className='relative flex items-end underline-custom group'>
+							<Link to='' className='flex items-center'>
+								Women <DownOutlined className='text-[10px]' />
+							</Link>
+							<div className='absolute hidden cursor-pointer group-hover:flex flex-col mt-0 w-[200px]  font-serrat gap-5 top-full left-0 bg-white p-4 shadow-lg transition-all duration-200'>
+								<p>Women's Clothing</p>
+								<p>Women's Accessories</p>
+							</div>
+						</li>
+
+						<li className='relative group'>
+							<Link to='' className='underline-custom'>
+								Contact us
+							</Link>
+							<div className='absolute hidden cursor-pointer group-hover:flex flex-col mt-0 w-[200px]  font-serrat gap-5 top-full left-0 bg-white p-4 shadow-lg transition-all duration-200'>
+								<p>Contact Information</p>
+								<p>Support</p>
+							</div>
+						</li>
 					</ul>
 				</div>
 

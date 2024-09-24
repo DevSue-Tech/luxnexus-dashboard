@@ -35,7 +35,7 @@ const AdminDashboard: React.FC = () => {
 	return (
 		<Layout className=' w-screen h-screen font-main'>
 			<Sider
-				style={{ background: '#2078F9', color: '#2078F9' }}
+				style={{ background: '#F8B466', color: '#F8B466' }}
 				className=' py-10'
 				trigger={null}
 				collapsible
@@ -43,7 +43,7 @@ const AdminDashboard: React.FC = () => {
 				<div className='demo-logo-vertical' />
 
 				<Menu
-					className='hover:text-blue-800 font-bold'
+					className='hover:text-main font-bold'
 					style={{ background: 'none', color: '#fff' }}
 					mode='inline'
 					selectedKeys={[selectedKey]}
@@ -53,27 +53,27 @@ const AdminDashboard: React.FC = () => {
 							key: '1',
 							icon: <PieChartFilled />,
 							label: 'Dashboard',
-							style: { color: selectedKey === '1' ? 'blue' : '#fff' },
+							style: { color: selectedKey === '1' ? '#F8B466' : '#fff' },
 							onClick: () => navigate('/admin-dashboard')
 						},
 						{
 							key: '2',
 							icon: <ProductOutlined />,
 							label: 'Products',
-							style: { color: selectedKey === '2' ? 'blue' : '#fff' },
+							style: { color: selectedKey === '2' ? '#F8B466' : '#fff' },
 							onClick: () => navigate('/admin-dashboard/product')
 						},
 						{
 							key: '3',
 							icon: <UserOutlined />,
 							label: 'Users',
-							style: { color: selectedKey === '3' ? 'blue' : '#fff' },
+							style: { color: selectedKey === '3' ? '#F8B466' : '#fff' },
 						},
 						{
 							key: '4',
 							icon: <TableOutlined />,
 							label: 'Inventory',
-							style: { color: selectedKey === '4' ? 'blue' : '#fff' },
+							style: { color: selectedKey === '4' ? '#F8B466' : '#fff' },
 							
 						},
 						{
