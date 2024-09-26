@@ -17,9 +17,7 @@ interface EmailSubscriberProps {
 }
 
 const HomeIndexPage = () => {
-	const { products, setProducts } = useContext(
-		AdminDashboardContext
-	) as AdminDashboardProps;
+	const { products } = useContext(AdminDashboardContext) as AdminDashboardProps;
 
 	const swiperRef = useRef<SwiperCore | null>(null);
 
@@ -73,6 +71,7 @@ const HomeIndexPage = () => {
 								price={price}
 								category={category}
 								photoURL={photoURL}
+								id={id}
 							/>
 						);
 					})}
@@ -115,12 +114,17 @@ const HomeIndexPage = () => {
 						slidesPerView={4}
 						autoplay={{ delay: 3000, disableOnInteraction: false }}>
 						{products?.map((product) => {
-							const { id, name, price, category } = product;
+							const { id, name, price, category, photoURL } = product;
 							return (
 								<SwiperSlide key={id}>
 									{' '}
-									
-									<ProductCard name={name} price={price} category={category} />
+									<ProductCard
+										name={name}
+										price={price}
+										category={category}
+										photoURL={photoURL}
+										id={id}
+									/>
 								</SwiperSlide>
 							);
 						})}

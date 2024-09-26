@@ -1,12 +1,13 @@
-import { Button } from 'antd';
 import { useState } from 'react';
 import AddtoCartModal from '../add-to-cart Modal/AddtoCartModal';
+import ImageWithSkeleton from '../ImageSkeleton/ImageWithSkeleton';
 
 type ProductCardProps = {
 	name: string;
 	category: string;
 	price: number;
-	photoURL: string | undefined
+	photoURL: string | undefined;
+	id: string
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -14,6 +15,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 	category,
 	price,
 	photoURL,
+	id
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -22,7 +24,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
 		setOpen(true);
 		setLoading(true);
 
-		
 		setTimeout(() => {
 			setLoading(false);
 		}, 2000);
@@ -30,15 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 	return (
 		<>
 			<div className='w-[300px] flex flex-col gap-2 items-center text-center'>
-				<div
-					style={{ backgroundImage: `url(" ${photoURL}")` }}
-					className='image w-full h-[350px] bg-slate-300 bg-no-repeat bg-cover relative group'>
-					<Button
-						onClick={showLoading}
-						className=' rounded-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute bottom-0 w-full bg-main bg-opacity-100 text-white flex items-center justify-center'>
-						Choose Options
-					</Button>
-				</div>
+				<ImageWithSkeleton photoURL={photoURL} showLoading={showLoading} />
 				<h1 className='font-bold'>{name}</h1>
 				<h5 className='text-slate-400'>{category}</h5>
 				<h2 className='font-serrat font-bold'>₦{price}</h2>
@@ -48,6 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 				open={open}
 				setOpen={setOpen}
 				showLoading={showLoading}
+				id = {id}
 			/>
 		</>
 	);

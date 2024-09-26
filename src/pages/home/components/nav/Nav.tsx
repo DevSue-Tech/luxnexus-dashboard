@@ -6,9 +6,14 @@ import {
 	UserOutlined,
 } from '@ant-design/icons';
 import { Badge, Carousel } from 'antd';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { StoreContext } from '../../../../utils/context/store/StoreContext';
+import { StoreProps } from '../../../../utils/context/store/StoreProps';
 
 const Nav = () => {
+
+	const {cartItems} = useContext(StoreContext) as StoreProps
 	return (
 		<nav className=' font-main'>
 			<Carousel
@@ -121,8 +126,8 @@ const Nav = () => {
 				<div className='flex gap-4'>
 					<UserOutlined style={{ fontSize: '24px' }} />
 					<HeartOutlined style={{ fontSize: '24px' }} />
-					<Badge count={5} showZero={false}>
-						<ShoppingCartOutlined style={{ fontSize: '24px' }} />
+					<Badge count={cartItems === null ? 0 : cartItems.length} showZero={true}>
+						<ShoppingCartOutlined style={{ fontSize: '24px' }}  />
 					</Badge>
 				</div>
 			</header>

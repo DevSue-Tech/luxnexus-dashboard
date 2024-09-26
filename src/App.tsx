@@ -50,8 +50,21 @@ function App() {
 
 	return (
 		<Routes>
-			<Route path='/' element={<Home />}>
-				<Route index element={ <HomeIndexPage />} />
+			<Route
+				path='/'
+				element={
+					<Suspense
+						fallback={
+							<section className=' flex justify-center items-center w-full h-screen'>
+								<Flex align='center' gap='middle'>
+									<Spin size='large' />
+								</Flex>
+							</section>
+						}>
+						<Home />
+					</Suspense>
+				}>
+				<Route index element={<HomeIndexPage />} />
 			</Route>
 			<Route path='/admin-login' element={<AdminLogin />}></Route>
 			<Route
@@ -72,10 +85,7 @@ function App() {
 				<Route path='product' element={<Products />}>
 					<Route index element={<ProductIndex />}></Route>
 					<Route path='add-new-product' element={<AddNewProduct />}></Route>
-					<Route path='edit-product/:id' element={<EditProduct />}>
-					
-					</Route>
-
+					<Route path='edit-product/:id' element={<EditProduct />}></Route>
 				</Route>
 			</Route>
 		</Routes>
