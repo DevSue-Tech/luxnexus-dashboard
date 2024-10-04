@@ -18,6 +18,8 @@ import ProductIndex from './pages/admin/products/productIndex';
 import EditProduct from './pages/admin/products/editProduct';
 import Home from './pages/home/Home';
 import HomeIndexPage from './pages/home/HomeIndexPage';
+import { StoreContext } from './utils/context/store/StoreContext';
+import { StoreProps } from './utils/context/store/StoreProps';
 const AdminDashboard = React.lazy(
 	() => import('./pages/admin/dashboard/dashboard')
 );
@@ -26,6 +28,8 @@ function App() {
 	const { user, setUser, setProducts } = useContext(
 		AdminDashboardContext
 	) as AdminDashboardProps;
+
+	const { setCartItems } = useContext(StoreContext) as StoreProps;
 	useEffect(() => {
 		const unsubscribe = customOnAuthStateChange(async (user: User | null) => {
 			if (user) {
@@ -40,6 +44,12 @@ function App() {
 				const fetchedProducts = await fetchProducts();
 
 				setProducts(fetchedProducts);
+
+				const storedCartItems = localStorage.getItem('cartItems');
+				if (storedCartItems) {
+					const cartItems = JSON.parse(storedCartItems);
+					setCartItems(cartItems); 
+				}
 			} else {
 				console.log('No user is signed in.');
 			}

@@ -51,6 +51,8 @@ const ProductList: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
+  
+
   // Columns for the table, including the fixed Edit button
   const columns: TableProps<DataType>['columns'] = [
     {

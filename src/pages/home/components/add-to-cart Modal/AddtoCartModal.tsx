@@ -1,8 +1,16 @@
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+	LoadingOutlined,
+	MinusOutlined,
+	PlusOutlined,
+} from '@ant-design/icons';
 import { Spin, Modal } from 'antd';
-import { useContext, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useState } from 'react';
 import { AdminDashboardContext } from '../../../../utils/context/admin-state-context/AdminContext';
 import { AdminDashboardProps } from '../../../../utils/context/admin-state-context/types/AdminTypes';
+import { StoreContext } from '../../../../utils/context/store/StoreContext';
+import { StoreProps } from '../../../../utils/context/store/StoreProps';
+import { Cart } from '../../../../utils/context/store/types/CartTypes';
+import { Product } from '../../../../utils/context/admin-state-context/types/ProductTypes';
 
 interface LoadingComponentProps {
 	loading: boolean;
@@ -11,7 +19,14 @@ interface LoadingComponentProps {
 	showLoading: () => void;
 	id: string;
 }
-const AddtoCartModal: React.FC<LoadingComponentProps> = ({
+
+interface FormProps {
+	size: string;
+	quantity: number;
+}
+
+type AddToCartModalProps = LoadingComponentProps & FormProps;
+const AddtoCartModal: React.FC<AddToCartModalProps> = ({
 	loading,
 	open,
 	setOpen,
@@ -20,6 +35,8 @@ const AddtoCartModal: React.FC<LoadingComponentProps> = ({
 	const size = ['S', 'M', 'L', 'XL', 'XXL'];
 	const [selectedSize, setSelectedSize] = useState<string | null>(null); // State to store the selected size
 	const { products } = useContext(AdminDashboardContext) as AdminDashboardProps;
+	const { cartItems, setCartItems } = useContext(StoreContext) as StoreProps;
+	const [addLoading, setAddLoading] = useState(false);
 
 	const filterSpecificProduct =
 		products?.filter((eachproduct) => {
@@ -47,6 +64,55 @@ const AddtoCartModal: React.FC<LoadingComponentProps> = ({
 			setCount((prevCount) => prevCount - 1);
 		}
 	};
+
+	const addToCart = (
+		product: Product,
+		size: string,
+		cartItems: Cart[] | null,
+		setCartItems: Dispatch<SetStateAction<Cart[] | null>>
+	) => {
+		setAddLoading(true);
+		const newCartItem: Cart = {
+			...product,
+			size: size,
+			quantity: count,
+			status: 'inCart',
+			photoURL: product.photoURL || '',
+		};
+
+		let updatedCartItems: Cart[];
+
+		if (cartItems) {
+			const existingItemIndex = cartItems.findIndex(
+				(item) => item.id === newCartItem.id && item.size === newCartItem.size
+			);
+
+			if (existingItemIndex > -1) {
+				const existingItem = cartItems[existingItemIndex];
+				existingItem.quantity += count; // Update quantity
+
+				updatedCartItems = [
+					...cartItems.slice(0, existingItemIndex),
+					existingItem,
+					...cartItems.slice(existingItemIndex + 1),
+				];
+			} else {
+				updatedCartItems = [...cartItems, newCartItem];
+			}
+		} else {
+			updatedCartItems = [newCartItem];
+		}
+
+		setCartItems(updatedCartItems);
+		localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+
+		setTimeout(() => {
+			setAddLoading(false);
+
+			setOpen(false);
+		}, 3000);
+	};
+
 	return (
 		<>
 			<Modal
@@ -112,9 +178,25 @@ const AddtoCartModal: React.FC<LoadingComponentProps> = ({
 								/>
 							</div>
 
-							<button className=' bg-main text-center font-bold text-white py-4 mt-5 font-serrat'>
+							<button
+								onClick={() => {
+									const size = selectedSize;
+									if (size) {
+										addToCart(product, size, cartItems, setCartItems);
+									} else {
+										alert('Please select a size.');
+									}
+								}}
+								className=' bg-main text-center font-bold text-white py-4 mt-5 font-serrat'>
 								{' '}
-								ADD TO CART
+								{addLoading ? (
+									<Spin
+										indicator={<LoadingOutlined className=' text-white' spin />}
+										size='small'
+									/>
+								) : (
+									'ADD TO CART'
+								)}
 							</button>
 						</div>
 					</section>

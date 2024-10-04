@@ -10,11 +10,13 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { StoreContext } from '../../../../utils/context/store/StoreContext';
 import { StoreProps } from '../../../../utils/context/store/StoreProps';
+import CartItems from '../cart-items/CartItems';
 
 const Nav = () => {
 
-	const {cartItems} = useContext(StoreContext) as StoreProps
+	const {cartItems,openCart, setOpenCart} = useContext(StoreContext) as StoreProps
 	return (
+		<>
 		<nav className=' font-main'>
 			<Carousel
 				dots={false}
@@ -126,12 +128,15 @@ const Nav = () => {
 				<div className='flex gap-4'>
 					<UserOutlined style={{ fontSize: '24px' }} />
 					<HeartOutlined style={{ fontSize: '24px' }} />
-					<Badge count={cartItems === null ? 0 : cartItems.length} showZero={true}>
-						<ShoppingCartOutlined style={{ fontSize: '24px' }}  />
+					<Badge  count={cartItems === null ? 0 : cartItems.length} showZero={true}>
+						<ShoppingCartOutlined className=' cursor-pointer' onClick={() => setOpenCart(true)} style={{ fontSize: '24px' }}  />
 					</Badge>
 				</div>
 			</header>
-		</nav>
+			</nav>
+			
+			{openCart && <CartItems />}
+		</>
 	);
 };
 

@@ -8,10 +8,13 @@ const StoreContextProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [cartItems, setCartItems] = useState<Cart[] | null>(null);
+	const [openCart, setOpenCart] = useState(false)
 
 	const storeContextValues = {
 		cartItems,
 		setCartItems,
+		openCart,
+		setOpenCart
 	};
 
 	return (

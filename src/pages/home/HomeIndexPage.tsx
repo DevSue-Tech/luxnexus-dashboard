@@ -36,6 +36,7 @@ const HomeIndexPage = () => {
 	};
 	return (
 		<>
+			
 			<section className=' bg-banner bg-no-repeat justify-center px-12 flex-col bg-cover h-[90vh] w-full flex'>
 				<div>
 					<h1 className='  font-bold text-white text-4xl font-serrat'>
