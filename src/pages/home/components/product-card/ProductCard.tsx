@@ -7,7 +7,9 @@ type ProductCardProps = {
 	category: string;
 	price: number;
 	photoURL: string | undefined;
-	id: string
+	id: string,
+	size: string,
+	quantity: number
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -15,7 +17,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 	category,
 	price,
 	photoURL,
-	id
+	id,
+	size,
+	quantity
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -30,18 +34,21 @@ const ProductCard: React.FC<ProductCardProps> = ({
 	};
 	return (
 		<>
-			<div className='w-[300px] flex flex-col gap-2 items-center text-center'>
+			<div className='w-[300px] flex flex-col gap-1 items-center text-center'>
 				<ImageWithSkeleton photoURL={photoURL} showLoading={showLoading} />
-				<h1 className='font-bold'>{name}</h1>
+				<h1 className=' mt-3 text-black font-bold'>{name}</h1>
 				<h5 className='text-slate-400'>{category}</h5>
-				<h2 className='font-serrat font-bold'>₦{price}</h2>
+				<h2 className='font-serrat text-black font-bold'>₦{price}</h2>
 			</div>
 			<AddtoCartModal
 				loading={loading}
 				open={open}
 				setOpen={setOpen}
 				showLoading={showLoading}
-				id = {id}
+				id={id}
+				size={size}
+				quantity={quantity}
+				
 			/>
 		</>
 	);

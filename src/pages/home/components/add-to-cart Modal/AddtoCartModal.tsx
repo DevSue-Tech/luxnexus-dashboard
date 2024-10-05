@@ -3,7 +3,7 @@ import {
 	MinusOutlined,
 	PlusOutlined,
 } from '@ant-design/icons';
-import { Spin, Modal } from 'antd';
+import { Spin, Modal, message } from 'antd';
 import { Dispatch, SetStateAction, useContext, useState } from 'react';
 import { AdminDashboardContext } from '../../../../utils/context/admin-state-context/AdminContext';
 import { AdminDashboardProps } from '../../../../utils/context/admin-state-context/types/AdminTypes';
@@ -11,6 +11,8 @@ import { StoreContext } from '../../../../utils/context/store/StoreContext';
 import { StoreProps } from '../../../../utils/context/store/StoreProps';
 import { Cart } from '../../../../utils/context/store/types/CartTypes';
 import { Product } from '../../../../utils/context/admin-state-context/types/ProductTypes';
+import { Bounce, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface LoadingComponentProps {
 	loading: boolean;
@@ -110,11 +112,24 @@ const AddtoCartModal: React.FC<AddToCartModalProps> = ({
 			setAddLoading(false);
 
 			setOpen(false);
-		}, 3000);
+		}, 1000);
+
+		message.success("Product Updated Successfully")
+	
 	};
 
 	return (
 		<>
+			<ToastContainer
+				position='top-right'
+				autoClose={5000}
+				hideProgressBar={false}
+				closeOnClick
+				draggable
+				pauseOnHover
+				transition={Bounce}
+			/>
+
 			<Modal
 				open={open}
 				onCancel={() => setOpen(false)}

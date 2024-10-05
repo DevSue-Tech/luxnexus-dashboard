@@ -14,7 +14,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
-import { db } from '../../../utils/firebase/auth/firebaseAuth'; // Update the path to your Firebase config
+import { db } from '../../../utils/firebase/auth/firebaseAuth';
 import { storage } from '../../../utils/firebase/firebaseConfig';
 
 interface AddNewProductProps {
@@ -22,8 +22,9 @@ interface AddNewProductProps {
 	description: string;
 	price: number;
 	category: string;
+	gender: string;
 	status: string;
-	photo: UploadFile<unknown> | string | null; // Accept string for URLs
+	photoURL: UploadFile<unknown> | string | null; // Accept string for URLs
 }
 
 const ProductCategory = [
@@ -35,6 +36,7 @@ const ProductCategory = [
 	'Wrist watch',
 ];
 const ProductStatus = ['IN-STOCK', 'OUT-OF-STOCK'];
+const Gender = ['MALE', 'FEMALE'];
 
 const EditProduct = () => {
 	const { id } = useParams();
@@ -46,10 +48,13 @@ const EditProduct = () => {
 	const [product, setProduct] = useState<AddNewProductProps | null>(null);
 
 	useEffect(() => {
-		// Fetch the product data from Firestore
 		const fetchProduct = async () => {
+			if (!id) return;
+
+			setLoading(true); // Start loading state
 			const productRef = doc(db, 'products', id as string);
 			const productDoc = await getDoc(productRef);
+
 			if (productDoc.exists()) {
 				const productData = productDoc.data() as AddNewProductProps;
 				setProduct(productData);
@@ -62,16 +67,19 @@ const EditProduct = () => {
 				setValue('status', productData.status);
 
 				// Set preview image if it exists
-				if (typeof productData.photo === 'string') {
-					setPreview(productData.photo); // This is just for the preview
+				if (typeof productData.photoURL === 'string') {
+					setPreview(productData.photoURL); // This is just for the preview
 				}
 			} else {
 				toast.error('Product not found');
+				setProduct(null); // Reset product state if not found
 			}
+
+			setLoading(false); // End loading state
 		};
 
 		fetchProduct();
-	}, [id, setValue]);
+	}, [id, setValue]); // Re-run when the product ID changes
 
 	const onSubmit: SubmitHandler<AddNewProductProps> = async (data) => {
 		setLoading(true);
@@ -95,8 +103,9 @@ const EditProduct = () => {
 				description: data.description || product?.description,
 				price: data.price || product?.price,
 				category: data.category || product?.category,
+				gender: data.gender,
 				status: data.status || product?.status,
-				photoURL: photoURL, // Keep the original photo unless a new one is uploaded
+				photo: photoURL, // Keep the original photo unless a new one is uploaded
 			};
 
 			// Update the Firestore document with the new product data
@@ -173,6 +182,27 @@ const EditProduct = () => {
 				/>
 
 				<Controller
+					name='gender'
+					control={control}
+					render={({ field }) => (
+						<div className='flex flex-col'>
+							<label className='font-bold text-main'>Product for</label>
+							<Select
+								className='w-[20%]'
+								size='large'
+								placeholder='SELECT GENDER'
+								{...field}>
+								{Gender.map((status) => (
+									<Select.Option key={status} value={status}>
+										{status}
+									</Select.Option>
+								))}
+							</Select>
+						</div>
+					)}
+				/>
+
+				<Controller
 					name='price'
 					control={control}
 					render={({ field }) => (
@@ -210,7 +240,7 @@ const EditProduct = () => {
 				/>
 
 				<Controller
-					name='photo'
+					name='photoURL'
 					control={control}
 					render={({ field }) => (
 						<div className='flex flex-col'>
@@ -221,18 +251,40 @@ const EditProduct = () => {
 								beforeUpload={() => false} // Prevent automatic upload
 								fileList={fileList} // Show uploaded file
 								onChange={({ fileList }) => {
-									setFileList(fileList); // Update the file list when a file is selected
-									field.onChange(fileList); // Ensure the form field is updated
+									setFileList(fileList); // Update the file list
+									field.onChange(fileList); // Sync with form
+
+									// Handle preview for new files
+									if (fileList.length > 0 && fileList[0].originFileObj) {
+										const file = fileList[0].originFileObj as File;
+										const previewURL = URL.createObjectURL(file);
+										setPreview(previewURL); // Show the new file's preview
+									} else {
+										// Fall back to original product photo
+										setPreview((product?.photoURL as string) || null);
+									}
 								}}
-								onRemove={() => {
-									setFileList([]); // Clear the file list if the user removes the photo
-									field.onChange(null); // Update form field when removed
+								onRemove={(file) => {
+									const newFileList = fileList.filter(
+										(item) => item.uid !== file.uid
+									);
+									setFileList(newFileList); // Clear file list on removal
+									if (newFileList.length === 0) {
+										// Reset to the original product photo if no files left
+										setPreview((product?.photoURL as string) || null);
+									} else {
+										// Handle the preview of the remaining file if any
+										const remainingFile = newFileList[0].originFileObj as File;
+										const previewURL = URL.createObjectURL(remainingFile);
+										setPreview(previewURL);
+									}
+									field.onChange(newFileList); // Update form field
 								}}>
 								<Button icon={<UploadOutlined />}>Select Photo</Button>
 							</Upload>
 
-							{/* Display the preview only if there's a preview URL and no files in the list */}
-							{preview && !fileList.length && (
+							{/* Display preview */}
+							{preview && (
 								<Image
 									src={preview}
 									alt='Uploaded Preview'

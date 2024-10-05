@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type Product = {
     name: string;
     description: string;
@@ -5,5 +7,9 @@ export type Product = {
     category: string;
     status: string;
     photoURL?: string;
-    id: string
+    id: string,
+    gender: string,
+    size: string,
+    quantity: number,
+    createdAt: Timestamp
 };

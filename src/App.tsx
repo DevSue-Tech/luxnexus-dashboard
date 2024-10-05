@@ -20,6 +20,9 @@ import Home from './pages/home/Home';
 import HomeIndexPage from './pages/home/HomeIndexPage';
 import { StoreContext } from './utils/context/store/StoreContext';
 import { StoreProps } from './utils/context/store/StoreProps';
+import NewArrival from './pages/home/components/new-arrival/NewArrival';
+import MenClothing from './pages/home/components/men/men-Clothing/MenClothing';
+import WomenClothing from './pages/home/components/men/women/women-clothing/WomenClothing';
 const AdminDashboard = React.lazy(
 	() => import('./pages/admin/dashboard/dashboard')
 );
@@ -61,7 +64,7 @@ function App() {
 	return (
 		<Routes>
 			<Route
-				path='/'
+				path='/home'
 				element={
 					<Suspense
 						fallback={
@@ -75,8 +78,11 @@ function App() {
 					</Suspense>
 				}>
 				<Route index element={<HomeIndexPage />} />
+				<Route path='new-arrival' element={<NewArrival />} />
+				<Route path='men-clothing' element={<MenClothing />} />
+				<Route path='women-clothing' element={<WomenClothing />} />
 			</Route>
-			<Route path='/admin-login' element={<AdminLogin />}></Route>
+			<Route path='/' element={<AdminLogin />}></Route>
 			<Route
 				path='/admin-dashboard'
 				element={

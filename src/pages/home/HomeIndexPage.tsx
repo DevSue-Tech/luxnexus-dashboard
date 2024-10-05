@@ -11,6 +11,7 @@ import { Button, Input } from 'antd';
 import { LeftOutlined, MailOutlined, RightOutlined } from '@ant-design/icons';
 import { AdminDashboardContext } from '../../utils/context/admin-state-context/AdminContext';
 import { AdminDashboardProps } from '../../utils/context/admin-state-context/types/AdminTypes';
+import AppFooter from './components/footer/Footer';
 
 interface EmailSubscriberProps {
 	email: string;
@@ -64,7 +65,7 @@ const HomeIndexPage = () => {
 
 				<div className=' mt-12 flex gap-5'>
 					{products?.slice(0, 4).map((product) => {
-						const { id, name, price, category, photoURL } = product;
+						const { id, name, price, category, photoURL, size, quantity } = product;
 						return (
 							<ProductCard
 								key={id}
@@ -73,6 +74,9 @@ const HomeIndexPage = () => {
 								category={category}
 								photoURL={photoURL}
 								id={id}
+								size={size}
+								quantity={quantity}
+								
 							/>
 						);
 					})}
@@ -115,7 +119,7 @@ const HomeIndexPage = () => {
 						slidesPerView={4}
 						autoplay={{ delay: 3000, disableOnInteraction: false }}>
 						{products?.map((product) => {
-							const { id, name, price, category, photoURL } = product;
+							const { id, name, price, category, photoURL, size, quantity } = product;
 							return (
 								<SwiperSlide key={id}>
 									{' '}
@@ -125,6 +129,8 @@ const HomeIndexPage = () => {
 										category={category}
 										photoURL={photoURL}
 										id={id}
+										size={size}
+										quantity={quantity}
 									/>
 								</SwiperSlide>
 							);
@@ -181,6 +187,8 @@ const HomeIndexPage = () => {
 					</form>
 				</div>
 			</section>
+
+			<AppFooter />
 		</>
 	);
 };

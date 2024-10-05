@@ -20,6 +20,7 @@ interface AddNewProductProps {
 	description: string;
 	price: number;
 	category: string;
+	gender: string;
 	status: string;
 	photo: UploadFile<unknown> | null; // Adjusted to allow null for no file selected
 }
@@ -34,6 +35,8 @@ const ProductCategory = [
 ];
 
 const ProductStatus = ['IN-STOCK', 'OUT-OF-STOCK'];
+
+const Gender = ['MALE', 'FEMALE'];
 
 const AddNewProduct = () => {
 	const { control, handleSubmit, reset } = useForm<AddNewProductProps>();
@@ -52,35 +55,32 @@ const AddNewProduct = () => {
 				const photoRef = ref(storage, `photos/${photoFile.name}`);
 				console.log('Firebase storage ref created:', photoRef.fullPath);
 
-			
 				await uploadBytes(photoRef, photoFile);
 				console.log('File successfully uploaded to Firebase Storage');
 
-				
 				photoURL = await getDownloadURL(photoRef);
 				console.log('File available at:', photoURL);
 			}
 
-			
 			const productCollectionRef = collection(firestore, 'products');
 			const newProductRef = doc(productCollectionRef);
 
-			
 			await setDoc(newProductRef, {
 				name: data.name,
 				description: data.description,
 				price: data.price,
 				category: data.category,
-				id: crypto.randomUUID(),
+				gender: data.gender,
+				id: newProductRef.id,
 				status: data.status,
-				photoURL: photoURL, 
-				createdAt: serverTimestamp(), 
+				photoURL: photoURL,
+				createdAt: serverTimestamp(),
 			});
 
 			console.log('Product successfully added to Firestore');
 
-			setPreview(null)
-			reset()
+			setPreview(null);
+			reset();
 
 			setTimeout(() => {
 				setLoading(false);
@@ -181,6 +181,28 @@ const AddNewProduct = () => {
 				/>
 
 				<Controller
+					name='gender'
+					control={control}
+					rules={{ required: 'Gender is required' }}
+					render={({ field }) => (
+						<div className='flex flex-col'>
+							<label className='font-bold text-main'>Product for</label>
+							<Select
+								className='w-[20%]'
+								size='large'
+								placeholder='Select Gender'
+								{...field}>
+								{Gender.map((i) => (
+									<Select.Option key={i} value={i}>
+										{i}
+									</Select.Option>
+								))}
+							</Select>
+						</div>
+					)}
+				/>
+
+				<Controller
 					name='price'
 					control={control}
 					rules={{ required: 'Price is required' }}
@@ -229,14 +251,13 @@ const AddNewProduct = () => {
 							<Upload
 								listType='picture'
 								accept='image/*'
-								beforeUpload={() => false} 
-								fileList={field.value ? [field.value] : []} 
+								beforeUpload={() => false}
+								fileList={field.value ? [field.value] : []}
 								onChange={({ fileList }) => {
-									const file = fileList[0]?.originFileObj; 
+									const file = fileList[0]?.originFileObj;
 									if (file) {
-										
 										field.onChange(fileList[0]);
-										
+
 										const reader = new FileReader();
 										reader.onload = (e) =>
 											setPreview(e?.target?.result as string);
@@ -244,17 +265,16 @@ const AddNewProduct = () => {
 
 										console.log(fileList[0]?.originFileObj);
 									} else {
-										setPreview(null); 
-										field.onChange(null); 
+										setPreview(null);
+										field.onChange(null);
 									}
 								}}
 								onRemove={() => {
-									setPreview(null); 
-									field.onChange(null); 
+									setPreview(null);
+									field.onChange(null);
 								}}>
 								<Button icon={<UploadOutlined />}>Select Photo</Button>
 							</Upload>
-
 
 							{preview && (
 								<Image
@@ -265,7 +285,6 @@ const AddNewProduct = () => {
 								/>
 							)}
 
-						
 							{error && <p className='text-red-500'>{error.message}</p>}
 						</div>
 					)}
