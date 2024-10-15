@@ -2,12 +2,10 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {
-	CreateNewUser,
-} from '../../../utils/firebase/auth/firebaseAuth';
+import { CreateNewUser } from '../../../utils/firebase/auth/firebaseAuth';
 import { useNavigate } from 'react-router-dom';
+import {  message} from 'antd';
 
 type UserLoginProps = {
 	email: string;
@@ -29,6 +27,8 @@ const UserLogin = () => {
 		setLoginType(type);
 	};
 
+	const [messageApi, contextHolder] = message.useMessage();
+
 	const loginToAdminDashboard = async (data: UserLoginProps) => {
 		const { email, password } = data;
 		console.log(email, password);
@@ -37,52 +37,43 @@ const UserLogin = () => {
 
 			const getLoginResponse = await CreateNewUser(email, password);
 
+			const success = () => {
+				messageApi.open({
+					type: 'success',
+					content: 'Login Successful',
+				});
+			};
+
+			const error = (message: string) => {
+				messageApi.open({
+					type: 'error',
+					content: message,
+				});
+			};
+
+			const warning = (meessage: string) => {
+				messageApi.open({
+					type: 'warning',
+					content: meessage,
+				});
+			};
+
 			if (getLoginResponse && typeof getLoginResponse !== 'string') {
 				setTimeout(() => {
 					setLoading(false);
-					toast.success('Login Successful', {
-						position: 'top-right',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						progress: undefined,
-						theme: 'light',
-						transition: Bounce,
-					});
+					success();
 				}, 2000);
 
 				navigate(`${loginType ? '/personal-information' : '/shop'}`);
 			} else if (typeof getLoginResponse === 'string') {
 				setTimeout(() => {
 					setLoading(false);
-					toast.error(getLoginResponse, {
-						position: 'top-right',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						progress: undefined,
-						theme: 'light',
-						transition: Bounce,
-					});
+					warning(getLoginResponse);
 				}, 2000);
 			} else {
 				setTimeout(() => {
 					setLoading(false);
-					toast.warning('Error logging in, please try again', {
-						position: 'top-right',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						progress: undefined,
-						theme: 'light',
-						transition: Bounce,
-					});
+					error('Error logging in, please try again');
 				}, 2000);
 			}
 		}
@@ -90,29 +81,13 @@ const UserLogin = () => {
 
 	return (
 		<section className='flex flex-col font-main py-12 md:py-24 items-center w-full h-auto'>
-			<ToastContainer
-				position='top-right'
-				autoClose={5000}
-				hideProgressBar={false}
-				newestOnTop={false}
-				closeOnClick
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover
-				theme='light'
-				transition={Bounce}
-			/>
-			{/* Same as */}
-			<ToastContainer />
+			{contextHolder}
 
 			<div className='flex gap-12 items-center '>
 				<div
 					onClick={() => SwitchLoginMethod(false)}
 					className='cursor-pointer flex flex-col '>
-					<h1 className='px-3 py-3 hover:text-main hover:bg-slate-900'>
-						Account Login
-					</h1>
+					<h1 className='px-3 py-3 hover:text-main '>Account Login</h1>
 					{loginType === false && (
 						<div className='h-[2px] rounded-3xl w-full bg-main'></div>
 					)}
@@ -120,9 +95,7 @@ const UserLogin = () => {
 				<div
 					onClick={() => SwitchLoginMethod(true)}
 					className='cursor-pointer flex flex-col'>
-					<h1 className='hover:bg-slate-900 hover:text-main px-3 py-2'>
-						Create New Account
-					</h1>
+					<h1 className=' hover:text-main px-3 py-2'>Create New Account</h1>
 					{loginType === true && (
 						<div className='h-[2px] rounded-3xl w-full bg-main'></div>
 					)}
