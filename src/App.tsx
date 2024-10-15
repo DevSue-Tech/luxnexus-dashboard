@@ -32,6 +32,7 @@ import UserLogin from './pages/home/login/Userlogin';
 import { UserContext } from './utils/context/user/UserContext';
 import { UserProps } from './utils/context/user/types/UserType';
 import PersonalInformation from './pages/home/components/personal-information/PersonalInformation';
+import Checkout from './pages/home/checkout/Checkout';
 const AdminDashboard = React.lazy(
 	() => import('./pages/admin/dashboard/dashboard')
 );
@@ -131,6 +132,7 @@ function App() {
 				<Route path='login' element={<UserLogin />} />
 				<Route path='personal-information' element={<PersonalInformation />} />
 				<Route path='shop' element={<Shop />} />
+				<Route path='checkout' element={<Checkout />} />
 				<Route path='clothing' element={<Clothing />} />
 				<Route path='bag' element={<Bag />} />
 				<Route path='shoes' element={<Shoes />} />

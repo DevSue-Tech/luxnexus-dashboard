@@ -161,36 +161,34 @@ export const createUserDocumentFromAuth = async (
 ) => {
     try {
         const userDocRef = doc(db, "users", userAuth.uid);
-        const userSnapshot = await getDoc(userDocRef);
 
-        if (!userSnapshot.exists()) {
-            const {  email } = userAuth;
-            const createdAt = new Date();
+        const { email } = userAuth;
+        const createdAt = new Date();
 
-            const generateDisplayName = () => {
-                const userEmail = email;
+        // Function to generate a display name
+        const generateDisplayName = () => {
+            const userEmail = email;
+            const getNameFromEmail = userEmail?.slice(0, 5).toLowerCase();
+            const randomNum = Math.floor(100 + Math.random() * 900);
+            return `${getNameFromEmail}${randomNum}`;
+        };
 
-                const getNameFromEmail = userEmail?.slice(0, 5).toLowerCase();
-                const randomNum = Math.floor(100 + Math.random() * 900);
+        const newDisplayName = generateDisplayName();
 
-                const newDisplayName = `${getNameFromEmail}${randomNum}`;
+        // Update profile with new display name
+        await updateProfile(userAuth, { displayName: newDisplayName }).catch((error) => {
+            console.error("Error updating user profile:", error);
+        });
 
-                return newDisplayName;
-            };
+        // Set/merge the document (whether or not it exists)
+        await setDoc(userDocRef, {
+            displayName: newDisplayName,
+            email,
+            createdAt,
+            ...additionalInformation,
+        }, { merge: true }); // Ensures no overwriting of existing fields
 
-            const newDisplayName = generateDisplayName()
-
-            await updateProfile(userAuth, {displayName : newDisplayName})
-
-            await setDoc(userDocRef, {
-                displayName: newDisplayName,
-                email,
-                createdAt,
-                ...additionalInformation,
-            });
-
-            console.log("User document created successfully");
-        }
+        console.log("User document created/updated successfully");
 
         return userDocRef;
     } catch (error) {
@@ -198,6 +196,7 @@ export const createUserDocumentFromAuth = async (
         throw error;
     }
 };
+
 
 
 const isAdminUser = async (uid: string): Promise<boolean> => {

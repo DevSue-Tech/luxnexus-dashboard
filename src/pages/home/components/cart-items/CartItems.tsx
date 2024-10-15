@@ -7,12 +7,17 @@ import {
 	MinusOutlined,
 	PlusOutlined,
 } from '@ant-design/icons';
-
+import { UserContext } from '../../../../utils/context/user/UserContext';
+import { UserProps } from '../../../../utils/context/user/types/UserType';
+import { useNavigate } from 'react-router-dom';
 
 const CartItems = () => {
+	const navigate = useNavigate();
 	const { cartItems, setOpenCart, setCartItems } = useContext(
 		StoreContext
 	) as StoreProps;
+
+	const { user } = useContext(UserContext) as UserProps;
 
 	const totalPrice = cartItems?.reduce((sum, item) => {
 		return sum + item.price * item.quantity;
@@ -50,6 +55,17 @@ const CartItems = () => {
 		setCartItems(updatedCartItems);
 		localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
 	};
+
+	const checkOut = () => {
+		if (user) {
+			alert('Checkout');
+		} else {
+			navigate('/login');
+			setOpenCart(false)
+		}
+	};		
+
+
 
 
 	return (
@@ -97,7 +113,6 @@ const CartItems = () => {
 										</div>
 
 										<h6 className=' ml-[100px] font-bold'>₦{price}</h6>
-										
 									</div>
 								</div>
 							</div>
@@ -118,11 +133,12 @@ const CartItems = () => {
 							Total Amount: ₦{totalPrice}
 						</h6>
 					</div>
-					<button className=' mt-4 w-full bg-black text-white font-serrat font-bold px-5 py-4'>
+					<button
+						onClick={checkOut}
+						className=' mt-4 w-full bg-black text-white font-serrat font-bold px-5 py-4'>
 						{' '}
 						Checkout
 					</button>
-					
 				</div>
 			</div>
 		</div>

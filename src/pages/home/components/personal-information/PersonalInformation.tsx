@@ -1,14 +1,18 @@
-import { Button, Input } from 'antd';
-import { useState } from 'react';
+import { Button, Input, message } from 'antd';
+import { useContext, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useNavigate } from 'react-router-dom';
 
-import { E164Number } from 'libphonenumber-js/core';
 import 'react-phone-number-input/style.css';
 import PhoneInputWithCountrySelect from 'react-phone-number-input';
+import { UserContext } from '../../../../utils/context/user/UserContext';
+import { UserProps } from '../../../../utils/context/user/types/UserType';
+import { createUserDocumentFromAuth } from '../../../../utils/firebase/auth/firebaseAuth';
+import { StoreContext } from '../../../../utils/context/store/StoreContext';
+import { StoreProps } from '../../../../utils/context/store/StoreProps';
 
 type UserLoginProps = {
 	firstName: string;
@@ -19,37 +23,74 @@ type UserLoginProps = {
 
 const PersonalInformation = () => {
 	const [loading, setLoading] = useState(false);
-	const [value, setValue] = useState<E164Number | undefined>(undefined);
+	const { user } = useContext(UserContext) as UserProps;
+	const { setOpenCart } = useContext(StoreContext) as StoreProps;
 
 	const navigate = useNavigate();
 
 	const { control, handleSubmit } = useForm<UserLoginProps>();
 
+	const [messageApi, contextHolder] = message.useMessage();
+
 	const UpdateProfile = async (data: UserLoginProps) => {
 		setLoading(true);
-		const { firstName, lastName, dob, phoneNo } = data;
+
+		const success = () => {
+			messageApi.open({
+				type: 'success',
+				content: 'Login Successful',
+			});
+		};
+
+		const error = (message: string) => {
+			messageApi.open({
+				type: 'error',
+				content: message,
+			});
+		};
+
+		const warning = (meessage: string) => {
+			messageApi.open({
+				type: 'warning',
+				content: meessage,
+			});
+		};
+
+		if (user) {
+			try {
+				setLoading(true);
+
+				await createUserDocumentFromAuth(user, {
+					...data,
+				});
+
+				console.log('User document created/updated successfully.');
+
+				setLoading(false);
+
+				success();
+				navigate('/shop');
+				setOpenCart(true);
+			} catch (err: unknown) {
+				setLoading(false);
+
+				if (err instanceof Error) {
+					error('Failed to create user document: ' + err.message);
+				} else {
+					error('An unknown error occurred.');
+				}
+			}
+		} else {
+			// Handle case where the user is null, display a warning
+			warning('User is null, cannot create user document');
+		}
 
 		console.log(data, 'dhdjdh');
 	};
 
 	return (
 		<section className='flex flex-col font-main py-12 md:py-24 px-12 md:px-24 w-full h-auto'>
-			<ToastContainer
-				position='top-right'
-				autoClose={5000}
-				hideProgressBar={false}
-				newestOnTop={false}
-				closeOnClick
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover
-				theme='light'
-				transition={Bounce}
-			/>
-			{/* Same as */}
-			<ToastContainer />
-
+			{contextHolder}
 			<div>
 				<h1 className=' text-3xl font-serrat font-bold text-main'>
 					Personal Information
@@ -103,9 +144,9 @@ const PersonalInformation = () => {
 					name='phoneNo'
 					control={control}
 					rules={{
-						required: 'lastName is required',
+						required: 'Phone No is required',
 					}}
-					render={() => (
+					render={({ field }) => (
 						<div className='font-serrat gap-2 flex flex-col'>
 							<label className='text-sm font-bold' htmlFor='lastName'>
 								Phone No
@@ -113,9 +154,8 @@ const PersonalInformation = () => {
 							<div className='flex items-center border border-gray-300 rounded px-2 py-1'>
 								<PhoneInputWithCountrySelect
 									country='NG'
-									value={value}
-									onChange={setValue}
 									className='w-full focus:outline-none'
+									{...field}
 								/>
 							</div>
 						</div>
@@ -126,7 +166,7 @@ const PersonalInformation = () => {
 					name='dob'
 					control={control}
 					rules={{
-						required: 'lastName is required',
+						required: 'Date of Birth is required',
 					}}
 					render={({ field }) => (
 						<div className=' font-serrat gap-2 flex flex-col'>
