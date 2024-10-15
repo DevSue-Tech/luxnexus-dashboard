@@ -55,7 +55,7 @@ const HomeIndexPage = () => {
 					Discover the latest trends and freshest styles in our New Arrivals
 					section. We're constantly updating with new releases every week, so be
 					sure to check back often to stay ahead of the fashion curve. Find your
-					next favorite look today!{' '}
+					next favorite look today!
 				</p>
 
 				<button className="relative  mt-8 font-serrat pb-1 after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-main">
