@@ -11,7 +11,6 @@ import { Button, Input } from 'antd';
 import { LeftOutlined, MailOutlined, RightOutlined } from '@ant-design/icons';
 import { AdminDashboardContext } from '../../utils/context/admin-state-context/AdminContext';
 import { AdminDashboardProps } from '../../utils/context/admin-state-context/types/AdminTypes';
-import AppFooter from './components/footer/Footer';
 
 interface EmailSubscriberProps {
 	email: string;
@@ -19,6 +18,7 @@ interface EmailSubscriberProps {
 
 const HomeIndexPage = () => {
 	const { products } = useContext(AdminDashboardContext) as AdminDashboardProps;
+
 
 	const swiperRef = useRef<SwiperCore | null>(null);
 
@@ -37,7 +37,6 @@ const HomeIndexPage = () => {
 	};
 	return (
 		<>
-			
 			<section className=' bg-banner bg-no-repeat justify-center px-12 flex-col bg-cover h-[90vh] w-full flex'>
 				<div>
 					<h1 className='  font-bold text-white text-4xl font-serrat'>
@@ -63,9 +62,10 @@ const HomeIndexPage = () => {
 					SHOP NOW
 				</button>
 
-				<div className=' mt-12 flex gap-5'>
+				<div className=' mt-12 flex flex-col md:flex-row gap-5'>
 					{products?.slice(0, 4).map((product) => {
-						const { id, name, price, category, photoURL, size, quantity } = product;
+						const { id, name, price, category, photoURL, size, quantity } =
+							product;
 						return (
 							<ProductCard
 								key={id}
@@ -76,7 +76,6 @@ const HomeIndexPage = () => {
 								id={id}
 								size={size}
 								quantity={quantity}
-								
 							/>
 						);
 					})}
@@ -111,18 +110,37 @@ const HomeIndexPage = () => {
 					</div>
 				</div>
 
-				<div className='mt-8 py-4'>
+				<div className=' md:px-0 px-12 mt-8 py-4'>
 					<Swiper
-						onSwiper={(swiper) => (swiperRef.current = swiper)} // Set the ref here
-						modules={[Navigation, Pagination, Autoplay]} // Attach modules for navigation and pagination
+						onSwiper={(swiper) => (swiperRef.current = swiper)}
+						className=' flex justify-center items-center'
+						modules={[Navigation, Pagination, Autoplay]}
 						spaceBetween={5}
 						slidesPerView={4}
-						autoplay={{ delay: 3000, disableOnInteraction: false }}>
+						autoplay={{ delay: 3000, disableOnInteraction: false }}
+						breakpoints={{
+							320: {
+								slidesPerView: 1,
+								spaceBetween: 10,
+							},
+							480: {
+								slidesPerView: 2, // 2 slides for slightly larger screens
+								spaceBetween: 10,
+							},
+							768: {
+								slidesPerView: 3, // 3 slides for tablets
+								spaceBetween: 10,
+							},
+							1024: {
+								slidesPerView: 4, // Default 4 slides for desktops
+								spaceBetween: 10,
+							},
+						}}>
 						{products?.map((product) => {
-							const { id, name, price, category, photoURL, size, quantity } = product;
+							const { id, name, price, category, photoURL, size, quantity } =
+								product;
 							return (
 								<SwiperSlide key={id}>
-									{' '}
 									<ProductCard
 										name={name}
 										price={price}
@@ -151,7 +169,7 @@ const HomeIndexPage = () => {
 				</div>
 
 				<div className=' flex flex-col justify-center '>
-					<form className='w-full px-24 flex  gap-2 '>
+					<form className='w-full px-5 md:px-24 flex  gap-2 '>
 						<Controller
 							name='email'
 							control={control}
@@ -187,8 +205,6 @@ const HomeIndexPage = () => {
 					</form>
 				</div>
 			</section>
-
-			<AppFooter />
 		</>
 	);
 };

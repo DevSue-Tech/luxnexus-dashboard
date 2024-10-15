@@ -7,12 +7,12 @@ import { Product } from "./types/ProductTypes"
 export const AdminDashboardContext = createContext<AdminDashboardProps | null>(null)
 
 const AdminDashboardProvider: React.FC<{ children: React.ReactNode }>= ({ children }) => {
-    const [user, setUser] = useState<User | null>(null)
+    const [AdminUser, setAdminUser] = useState<User | null>(null)
     const [products, setProducts] = useState<Product[] | null>(null)
 
     const contextValues = {
-        user,
-        setUser,
+        AdminUser,
+        setAdminUser,
         products,
         setProducts
     }

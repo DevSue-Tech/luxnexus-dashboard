@@ -296,7 +296,7 @@ const EditProduct = () => {
 					)}
 				/>
 
-				<Button type='primary' htmlType='submit' loading={loading}>
+				<Button className=' bg-main' type='primary' htmlType='submit' loading={loading}>
 					Update Product
 				</Button>
 			</form>

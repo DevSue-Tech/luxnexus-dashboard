@@ -290,16 +290,10 @@ const AddNewProduct = () => {
 					)}
 				/>
 
-				<div className='flex items-center justify-between text-sm'>
-					<div className='flex gap-3 items-center'>
-						<input type='checkbox' name='' id='' />
-						<span>Remember me</span>
-					</div>
-					<h2 className='cursor-pointer text-sm'>Forgot Password?</h2>
-				</div>
+				
 
 				<Button
-					className='py-5'
+					className='py-5 bg-main'
 					htmlType='submit'
 					type='primary'
 					loading={loading}>

@@ -8,10 +8,15 @@ import {
 	PlusOutlined,
 } from '@ant-design/icons';
 
+
 const CartItems = () => {
 	const { cartItems, setOpenCart, setCartItems } = useContext(
 		StoreContext
 	) as StoreProps;
+
+	const totalPrice = cartItems?.reduce((sum, item) => {
+		return sum + item.price * item.quantity;
+	}, 0);
 
 	const handleDeleteItem = (id: string) => {
 		const updatedCartItems = cartItems?.filter((item) => item.id !== id) || [];
@@ -45,6 +50,7 @@ const CartItems = () => {
 		setCartItems(updatedCartItems);
 		localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
 	};
+
 
 	return (
 		<div className=' z-40 fixed w-screen top-0 left-0 h-screen  flex'>
@@ -91,6 +97,7 @@ const CartItems = () => {
 										</div>
 
 										<h6 className=' ml-[100px] font-bold'>₦{price}</h6>
+										
 									</div>
 								</div>
 							</div>
@@ -99,20 +106,23 @@ const CartItems = () => {
 				</div>
 
 				<div className=' fixed bottom-0 px-5 py-5 bg-white '>
-					<div className=' flex items-center'>
+					<div className=' flex font-serrat items-center'>
 						<div>
-							<h1 className=' font-bold'>SubTotal</h1>
+							<h1 className=' font-bold'>SubTotal: ₦{totalPrice}</h1>
 							<h3 className=' text-sm text-slate-500'>
 								Taxes and Shipping are calculated in Cheeckout
 							</h3>
 						</div>
 
-						<h6 className=' ml-24 text-xs '>Total Amount: ₦000000</h6>
+						<h6 className=' ml-24 text-xs font-bold font-serrat '>
+							Total Amount: ₦{totalPrice}
+						</h6>
 					</div>
 					<button className=' mt-4 w-full bg-black text-white font-serrat font-bold px-5 py-4'>
 						{' '}
-						CheckOut
+						Checkout
 					</button>
+					
 				</div>
 			</div>
 		</div>

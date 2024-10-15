@@ -14,6 +14,7 @@ import { Button,  Layout, Menu, MenuProps,  theme } from 'antd';
 import { AdminDashboardProps } from '../../../utils/context/admin-state-context/types/AdminTypes';
 import { AdminDashboardContext } from '../../../utils/context/admin-state-context/AdminContext';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { logOutAdmin } from '../../../utils/firebase/auth/firebaseAuth';
 
 const { Header, Sider, Content } = Layout;
 
@@ -24,7 +25,7 @@ const AdminDashboard: React.FC = () => {
 	} = theme.useToken();
 
 	const [selectedKey, setSelectedKey] = useState('1');
-	const { user } = useContext(AdminDashboardContext) as AdminDashboardProps;
+	const { AdminUser, setAdminUser } = useContext(AdminDashboardContext) as AdminDashboardProps;
 
 	const handleMenuClick: MenuProps['onClick'] = (e) => {
 		setSelectedKey(e.key);
@@ -85,6 +86,10 @@ const AdminDashboard: React.FC = () => {
 								position: 'absolute',
 								bottom: '15px',
 							},
+							onClick: () => {
+								logOutAdmin(AdminUser)
+								setAdminUser(null)
+							}
 						},
 					]}
 				/>
@@ -110,8 +115,8 @@ const AdminDashboard: React.FC = () => {
 
 					<h5 className=' ml-auto text-main font-bold'>
 						Welcome{' '}
-						{user && typeof user.displayName === 'string'
-							? user.displayName
+						{AdminUser && typeof AdminUser.displayName === 'string'
+							? AdminUser.displayName
 							: 'Guest'}
 					</h5>
 				</Header>
